@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Make It Move!</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        button{
+            height:100px;
+            width:200px;
+            margin: 30px 0px;
+            position:relative;
+            top:50%;
+        }
+    
+    div{
+        text-align:center;
+    }
+    </style>
+</head>
+<body>
+
+<div>
+<button type="button" id="left" onclick="left()">LEFT</button>
+</div>
+<div>
+<button type="button" id="right" onclick="right()">RIGHT</button>
+</div>
+<div>
+<button type="button" id="stop" onclick="stop()">STOP</button>
+</div>
+<script type="text/javascript">
+function left(){
+    $.ajax({
+   		url: 'http://makeitmoveyun.local/arduino/servo/180',
+  		type: 'GET',
+    	success: function() {  }
+	});
+}
+function right(){
+    $.ajax({
+    	url: 'http://makeitmoveyun.local/arduino/servo/0',
+	    type: 'GET',
+    	success: function() { }
+	});
+	}
+
+function stop(){
+    $.ajax({
+   		url: 'http://makeitmoveyun.local/arduino/servo/90',
+  		type: 'GET',
+    	success: function() {  }
+	});
+}
+
+</script>
+
+</body>
+</html>
