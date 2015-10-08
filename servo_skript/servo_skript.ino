@@ -34,7 +34,7 @@ void setup() {
   servo1.attach(inEnginePin1);
   servo1.write(stopValue);
 
-  //Set up engine1. Schould correspond to linear module engine.
+  //Set up engine2. Schould correspond to rotation module engine.
   servo2.attach(inEnginePin2);
   servo2.write(stopValue);
   
@@ -55,7 +55,26 @@ String readString;
 void loop() {
   
   endCheck1(); //Safety check, in case the mover is running to the end.
-  getInfoProtocol();  //Recive orders via Serial using the protocol.
+
+  while(!Serial.available()) {
+    endCheck1(); //Safety check, in case the mover is running to the end.
+  }
+  
+  // Serial read section
+
+  endCheck1(); //Safety check, in case the mover is running to the end.
+  if (Serial.available() >0){
+    char c = Serial.read();  //gets one byte from serial buffer
+    readString += c; //makes the string readString
+  }
+
+  if (readString.length() < 4){
+    checkIfStringValid(readString);
+  } else {
+    checkIfStringValid(readString);
+    parseSerialData(readString);  //Recive orders via Serial using the protocol.
+    readString = "";
+  }
   
 }
 
@@ -160,32 +179,23 @@ void endCheck1 (){
   if ( ( sensorInput1 >= (lowPassFilter*passFraction) )||( sensorInput2 >= (lowPassFilter*passFraction) ) ){
     servo1.write(stopValue);  //Stop!
   }
+}
 
+void checkIfStringValid(String toCheck){
+
+  
+}
 
 //Gets information from according to the protocol. Executes rotation with respect to it.
-void getInfoProtocol(){
+void parseSerialData(String serialString){
 
-  readString = "";
-  
-  while(!Serial.available()) {
-    endCheck1(); //Safety check, in case the mover is running to the end.
+  if(serialString[0] == 'R'){
+    servo2.write(serialString.substring(1).toInt());
+  } else if ( serialString[0] == 'L'){
+    servo1.write(serialString.substring(1).toInt());
   }
-  
-  // Serial read section
-
-  endCheck1(); //Safety check, in case the mover is running to the end.
-  if (Serial.available() >0){
-    char c = Serial.read();  //gets one byte from serial buffer
-    readString += c; //makes the string readString
-  }
-  
-  if(readString == "R"){
-    servo2.write(Serial.parseInt());
-    
-  } else if ( readString == "L"){
-      servo1.write(Serial.parseInt());
-  }
-  
+  //Serial.print(serialString.substring(1).toInt());
+  //Serial.println(serialString);
 }
 
 //Implementation of information transfer protocol for calibration data.
