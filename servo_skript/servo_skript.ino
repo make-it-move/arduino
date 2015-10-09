@@ -4,10 +4,12 @@
 //It chacks if the mover is runing out of permited area and, if so, stops it.
 //Safety first =).
 
-int inSensorPin1 = 48; //sensor1 pin on Arduino. Reached after rotating counter-clockwise, speed>90.
-int inSensorPin2 = 30; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 int inEnginePin1 = 52; //engine1 control pin on Arduino.
 int inEnginePin2 = 53; //engine1 control pin on Arduino.
+
+bool ifSensorsAttached = 1;  //Says if we have switches or not.
+int inSensorPin1 = 48; //sensor1 pin on Arduino. Reached after rotating counter-clockwise, speed>90.
+int inSensorPin2 = 30; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 
 int stopValue = 90; //Walue when the engine should actually stop
 int sensorInertia = 1; //Time in milliseconds for the sensor to respond correctly.
@@ -41,11 +43,12 @@ void setup() {
   while(digitalRead(inSensorPin1)); //Make shure sensor1 works.
   while(digitalRead(inSensorPin2)); //Make shure sensor2 works.
 
-  endCalibrate1();  //Move to the start of the platform.
+  if (ifSensorsAttached){
+    endCalibrate1();  //Move to the start of the platform.
   
-  runDuration=timeCalibrate1();  //Move to the other end of the platform, measure time.
-  sendCalibrationInfoProtocol(runDuration); //Send calibration data via serial using the protocol.
-
+    runDuration=timeCalibrate1();  //Move to the other end of the platform, measure time.
+    sendCalibrationInfoProtocol(runDuration); //Send calibration data via serial using the protocol.
+  }
 
 }
 
@@ -77,6 +80,10 @@ void loop() {
   }
   
 }
+
+
+
+//Calibration block starts______________________________________________________________
 
 //the mover goes maximaly left and stops. Speed is set 180 by defolt.
 void endCalibrate1 (){ //the mover goes maximaly left and stops.
@@ -165,19 +172,25 @@ int timeCalibrate1 (int calibrationSpeed){
   return millis() - startTime; //finnishing (point in time) - starting (point in time) = duration
 }
 
+//Calibration block finishes______________________________________________________________
+
 //The mover schould stop if any of the switches activates!
+//Note: uses global variable ifSensorsAttached
+//Should work only if sensors are indeed there.ifSensorsAttached: 1 - works, 0 - doesn't work.
 void endCheck1 (){
-  int i;
-  int sensorInput1=0;
-  int sensorInput2=0;
-  for (i=0; i<lowPassFilter; ++i){  //Low pass filter
-    sensorInput1+=digitalRead(inSensorPin1);
-    sensorInput2+=digitalRead(inSensorPin2);
-    delay(sensorInertia); //Inertia of the sensor
+  if (ifSensorsAttached){
+    int i;
+    int sensorInput1=0;
+    int sensorInput2=0;
+    for (i=0; i<lowPassFilter; ++i){  //Low pass filter
+      sensorInput1+=digitalRead(inSensorPin1);
+      sensorInput2+=digitalRead(inSensorPin2);
+      delay(sensorInertia); //Inertia of the sensor
     }
-  //Serial.print(sensorInput);
-  if ( ( sensorInput1 >= (lowPassFilter*passFraction) )||( sensorInput2 >= (lowPassFilter*passFraction) ) ){
-    servo1.write(stopValue);  //Stop!
+    //Serial.print(sensorInput);
+    if ( ( sensorInput1 >= (lowPassFilter*passFraction) )||( sensorInput2 >= (lowPassFilter*passFraction) ) ){
+      servo1.write(stopValue);  //Stop!
+    }
   }
 }
 
@@ -186,17 +199,23 @@ void checkIfStringValid(String toCheck){
   
 }
 
+
+//The information protocol block starts______________________________________________________________
+
 //Gets information from according to the protocol. Executes rotation with respect to it.
+//Note: uses global variable ifSensorsAttached
 void parseSerialData(String serialString){
 
-  if(serialString[0] == 'R'){
+  if(serialString[0] == 'R'){ //rotation
     servo2.write(serialString.substring(1).toInt());
-  } else if ( serialString[0] == 'L'){
+  } else if ( serialString[0] == 'L'){  //linear movement
     servo1.write(serialString.substring(1).toInt());
-  } else if ( serialString[0] == 'C'){
+  } else if ( serialString[0] == 'C'){  //Calibration (of linear mover).
     int calibrationSpeed = serialString.substring(1).toInt();
-    endCalibrate1(calibrationSpeed);  //Move to the start of the platform. 
-    sendCalibrationInfoProtocol(timeCalibrate1(calibrationSpeed));  //Move to the other end of the platform, measure time. Send calibration data via serial using the protocol.
+    if (ifSensorsAttached){
+      endCalibrate1(calibrationSpeed);  //Move to the start of the platform. 
+      sendCalibrationInfoProtocol(timeCalibrate1(calibrationSpeed));  //Move to the other end of the platform, measure time. Send calibration data via serial using the protocol.
+    }
   }
   //Serial.print(serialString.substring(1).toInt());
   //Serial.println(serialString);
@@ -214,4 +233,6 @@ void sendCalibrationInfoProtocol(unsigned long runDuration){
   }
   Serial.println(runDuration/100);  
 }
+
+//The information protocol block finishes______________________________________________________________
 
