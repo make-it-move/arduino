@@ -7,20 +7,22 @@
 //Arduino DUI Configuration
 //int inEnginePin1 = 52; //engine1 control pin on Arduino.
 //int inEnginePin2 = 53; //engine1 control pin on Arduino.
+//int inSensorPin1 = 48; //sensor1 pin on Arduino. Reached after rotating counter-clockwise, speed>90.
+//int inSensorPin2 = 30; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 
 //Arduino UNO Configuration
-int inEnginePin1 = 7;
-int inEnginePin2 = 8;
+int inEnginePin1 = 8;
+int inEnginePin2 = 9;
 
-bool ifSensorsAttached = 0;  //Says if we have switches or not.
-int inSensorPin1 = 48; //sensor1 pin on Arduino. Reached after rotating counter-clockwise, speed>90.
-int inSensorPin2 = 30; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
+bool ifSensorsAttached = 1;  //Says if we have switches or not.
+int inSensorPin1 = 6; //sensor1 pin on Arduino. Reached after rotating counter-clockwise, speed>90.
+int inSensorPin2 = 7; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 
 int stopValue = 90; //Walue when the engine should actually stop
 int sensorInertia = 1; //Time in milliseconds for the sensor to respond correctly.
 
 int lowPassFilter = 100;  //How low pass the filtar is actualy is
-double passFraction = 0.1;  //Correctness ratio of the sensor
+double passFraction = 0.01;  //Correctness ratio of the sensor
 
 unsigned long runDuration; // duration of 1 run at maximal speed. Aquired by the call of timeCalibrate
 
@@ -49,10 +51,10 @@ void setup() {
     while(digitalRead(inSensorPin1)); //Make shure sensor1 works.
     while(digitalRead(inSensorPin2)); //Make shure sensor2 works.
 
-    endCalibrate1();  //Move to the start of the platform.
+    /*endCalibrate1();  //Move to the start of the platform.
   
     runDuration=timeCalibrate1();  //Move to the other end of the platform, measure time.
-    sendCalibrationInfoProtocol(runDuration); //Send calibration data via serial using the protocol.
+    sendCalibrationInfoProtocol(runDuration); //Send calibration data via serial using the protocol.*/
   }
 
 }
@@ -119,6 +121,7 @@ void endCalibrate1 (int calibrationSpeed){
   while ( sensorInput<(lowPassFilter*passFraction) ){ //Some inputs might have mistakes
     sensorInput=0; 
     servo1.write(calibrationSpeed);
+    Serial.println(sensorInput);
     for (int i=0; i<lowPassFilter; ++i){  //Low pass filter
       //Serial.print(sensorInput);
       sensorInput+=digitalRead(inSensorPin1);
