@@ -20,7 +20,7 @@ int stopValue = 90; //Walue when the engine should actually stop
 int sensorInertia = 1; //Time in milliseconds for the sensor to respond correctly.
 
 int lowPassFilter = 100;  //How low pass the filtar is actualy is
-double passFraction = 0.9;  //Correctness ratio of the sensor
+double passFraction = 0.1;  //Correctness ratio of the sensor
 
 unsigned long runDuration; // duration of 1 run at maximal speed. Aquired by the call of timeCalibrate
 
