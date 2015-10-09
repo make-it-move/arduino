@@ -4,10 +4,15 @@
 //It chacks if the mover is runing out of permited area and, if so, stops it.
 //Safety first =).
 
-int inEnginePin1 = 52; //engine1 control pin on Arduino.
-int inEnginePin2 = 53; //engine1 control pin on Arduino.
+//Arduino DUI Configuration
+//int inEnginePin1 = 52; //engine1 control pin on Arduino.
+//int inEnginePin2 = 53; //engine1 control pin on Arduino.
 
-bool ifSensorsAttached = 1;  //Says if we have switches or not.
+//Arduino UNO Configuration
+int inEnginePin1 = 7;
+int inEnginePin2 = 8;
+
+bool ifSensorsAttached = 0;  //Says if we have switches or not.
 int inSensorPin1 = 48; //sensor1 pin on Arduino. Reached after rotating counter-clockwise, speed>90.
 int inSensorPin2 = 30; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 
@@ -43,9 +48,7 @@ void setup() {
   if (ifSensorsAttached){
     while(digitalRead(inSensorPin1)); //Make shure sensor1 works.
     while(digitalRead(inSensorPin2)); //Make shure sensor2 works.
-  }
 
-  if (ifSensorsAttached){
     endCalibrate1();  //Move to the start of the platform.
   
     runDuration=timeCalibrate1();  //Move to the other end of the platform, measure time.
@@ -220,7 +223,7 @@ void parseSerialData(String serialString){
     }
   }
   //Serial.print(serialString.substring(1).toInt());
-  //Serial.println(serialString);
+  Serial.println(serialString);
 }
 
 //Implementation of information transfer protocol for calibration data.
