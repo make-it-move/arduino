@@ -39,9 +39,11 @@ void setup() {
   //Set up engine2. Schould correspond to rotation module engine.
   servo2.attach(inEnginePin2);
   servo2.write(stopValue);
-  
-  while(digitalRead(inSensorPin1)); //Make shure sensor1 works.
-  while(digitalRead(inSensorPin2)); //Make shure sensor2 works.
+
+  if (ifSensorsAttached){
+    while(digitalRead(inSensorPin1)); //Make shure sensor1 works.
+    while(digitalRead(inSensorPin2)); //Make shure sensor2 works.
+  }
 
   if (ifSensorsAttached){
     endCalibrate1();  //Move to the start of the platform.
