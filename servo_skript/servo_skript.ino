@@ -193,6 +193,10 @@ void parseSerialData(String serialString){
     servo2.write(serialString.substring(1).toInt());
   } else if ( serialString[0] == 'L'){
     servo1.write(serialString.substring(1).toInt());
+  } else if ( serialString[0] == 'C'){
+    int calibrationSpeed = serialString.substring(1).toInt();
+    endCalibrate1(calibrationSpeed);  //Move to the start of the platform. 
+    sendCalibrationInfoProtocol(timeCalibrate1(calibrationSpeed));  //Move to the other end of the platform, measure time. Send calibration data via serial using the protocol.
   }
   //Serial.print(serialString.substring(1).toInt());
   //Serial.println(serialString);
