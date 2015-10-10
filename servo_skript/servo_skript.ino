@@ -264,7 +264,7 @@ void linearMoveLeft(){
 
 void hitOnce(){
   servo2.write(0);
-  delay(110);
+  delay(103);
   servo2.write(180);
   delay(100);
   servo2.write(90);
