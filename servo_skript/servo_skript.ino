@@ -11,10 +11,10 @@
 //int inSensorPin2 = 30; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 
 //Arduino UNO Configuration
-int inEnginePin1 = 8;
+int inEnginePin1 = 10;
 int inEnginePin2 = 9;
 
-bool ifSensorsAttached = 1;  //Says if we have switches or not.
+bool ifSensorsAttached = 0;  //Says if we have switches or not.
 int inSensorPin1 = 6; //sensor1 pin on Arduino. Reached after rotating counter-clockwise, speed>90.
 int inSensorPin2 = 7; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 
