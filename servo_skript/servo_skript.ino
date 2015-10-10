@@ -162,8 +162,14 @@ void endCheck1 (){
       delay(sensorInertia); //Inertia of the sensor
     }
     //Serial.print(sensorInput);
-    if ( ( sensorInput1 >= (lowPassFilter*passFraction) )||( sensorInput2 >= (lowPassFilter*passFraction) ) ){
-      servo1.write(stopValue);  //Stop!
+    // Left button pressed
+    if ( sensorInput1 >= (lowPassFilter*passFraction) ){
+      servo1.write(stopValue);
+      moveAwayFromSwitch(100); // initially moving left
+    }
+    if ( sensorInput2 >= (lowPassFilter*passFraction) ){
+      servo1.write(stopValue);
+      moveAwayFromSwitch(80); // initially moving right
     }
   }
 }
@@ -171,7 +177,6 @@ void endCheck1 (){
 void checkIfStringValid(String toCheck){
   
 }
-
 
 //The information protocol block starts______________________________________________________________
 
@@ -199,12 +204,25 @@ void parseSerialData(String serialString){
   } else if ( serialString[0] == 'C'){  //Calibration (of linear mover).
     int calibrationSpeed = serialString.substring(1).toInt();
     if (ifSensorsAttached){
-      endCalibrate1(calibrationSpeed);  //Move to the start of the platform. 
-      sendCalibrationInfoProtocol(timeCalibrate1(180-calibrationSpeed));  //Move to the other end of the platform, measure time. Send calibration data via serial using the protocol.
+      endCalibrate1(calibrationSpeed);  //Move to the start of the platform.
+      
+      int timeCalibrateSpeed = 180 - calibrationSpeed; // Move in the other direction
+      sendCalibrationInfoProtocol(timeCalibrate1(timeCalibrateSpeed));  //Move to the other end of the platform, measure time. Send calibration data via serial using the protocol.
+      moveAwayFromSwitch(timeCalibrateSpeed);
     }
   }
   //Serial.print(serialString.substring(1).toInt());
   //Serial.println(serialString);
+}
+
+void moveAwayFromSwitch(int initialSpeed){
+  if(initialSpeed > 90){ // left
+    servo1.write(80); // right
+  } else { // right
+    servo1.write(100); //left
+  }
+  delay(200);
+  servo1.write(90);
 }
 
 //Implementation of information transfer protocol for calibration data.
