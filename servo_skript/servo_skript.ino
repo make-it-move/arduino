@@ -270,9 +270,8 @@ void hitOnce(){
   servo2.write(90);
 }
 
-
+// ** London bridge falling down
 void playSongOne(){
-  
   endCalibrate1(100);
   linearMoveRight();
   linearMoveRight();
@@ -346,80 +345,3 @@ void playSongOne(){
   hitOnce();
   //10          
 }
-
-/*
-void playSongOne(){
-  
-  endCalibrate1();
-  linearMoveRight();
-  linearMoveRight();
-  linearMoveRight();
-  linearMoveRight();
-  linearMoveRight();
-   //5 
-  hitOnce();
-  linearMoveRight();
-  hitOnce();
-  linearMoveLeft();
-  hitOnce();
-  //10          
-  linearMoveLeft();
-  hitOnce();
-  linearMoveLeft();
-  hitOnce();
-  linearMoveRight();
-  //15
-  hitOnce();
-  linearMoveRight();
-  hitOnce();
-  linearMoveLeft();
-  linearMoveLeft();
-  //20   
-  linearMoveLeft();
-  hitOnce();
-  linearMoveRight();
-  hitOnce();
-  linearMoveRight();
-  //25
-  hitOnce();          
-  linearMoveLeft();
-  hitOnce();
-  linearMoveRight();
-  hitOnce();
-  //30
-  linearMoveRight();   
-  hitOnce();
-  hitOnce();
-  linearMoveRight();  
-  hitOnce();
-  //35
-  linearMoveLeft();
-  hitOnce();          
-  linearMoveLeft();
-  hitOnce();
-  linearMoveLeft();
-  //40
-  hitOnce();
-  linearMoveRight();  
-  hitOnce();
-  linearMoveRight();
-  hitOnce();
-  //45
-  linearMoveLeft();
-  linearMoveLeft();
-  linearMoveLeft();
-  hitOnce();
-  linearMoveRight();
-  //50
-  linearMoveRight();
-  linearMoveRight();  
-  hitOnce();
-  linearMoveLeft();
-  linearMoveLeft();
-  //55
-  hitOnce();
-  linearMoveLeft();
-  linearMoveLeft();
-  hitOnce();
-}
-*/
