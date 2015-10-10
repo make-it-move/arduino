@@ -26,6 +26,8 @@ double passFraction = 0.1;  //Correctness ratio of the sensor
 
 unsigned long runDuration; // duration of 1 run at maximal speed. Aquired by the call of timeCalibrate
 
+// Song-Playing
+int moverPosition = 0; // after endcalibrate, all to the left (max 9)
 
 //Declare engines.
 Servo servo1;
@@ -184,9 +186,7 @@ void checkIfStringValid(String toCheck){
 void parseSerialData(String serialString){
   if(serialString[0] == 'P'){
     playSongOne();
-    
-  } else
-  if(serialString[0] == 'R'){ //rotation
+  } else if(serialString[0] == 'R'){ //rotation
     if(serialString[1] == 'H'){
       hitOnce();
     } else {
@@ -244,27 +244,110 @@ void sendCalibrationInfoProtocol(unsigned long runDuration){
 //The information protocol block finishes______________________________________________________________
 
 /* NOT SAFE for boundaries! */
-void linearMoveLeft(){
-  servo1.write(0);
-  delay(270);
-  servo1.write(90);
+void linearMoveRight(){
+  if(moverPosition<9){
+    servo1.write(0);
+    delay(270);
+    servo1.write(90);
+    moverPosition = moverPosition + 1;
+  }
 }
 
-void linearMoveRight(){
-  servo1.write(180);
-  delay(270);
-  servo1.write(90);
+void linearMoveLeft(){
+  if(moverPosition>0){
+    servo1.write(180);
+    delay(270);
+    servo1.write(90);
+    moverPosition = moverPosition - 1;
+  }
 }
 
 void hitOnce(){
   servo2.write(0);
-  delay(100);
+  delay(110);
   servo2.write(180);
   delay(100);
   servo2.write(90);
-  hitOnce();
 }
 
+
+void playSongOne(){
+  
+  endCalibrate1(100);
+  linearMoveRight();
+  linearMoveRight();
+  linearMoveRight();
+  linearMoveRight();
+  linearMoveRight();
+   //5 
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  linearMoveLeft();
+  hitOnce();
+  //10          
+  linearMoveLeft();
+  hitOnce();
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  //15
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  linearMoveLeft();
+  linearMoveLeft();
+  //20   
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  linearMoveRight();
+  //25
+  hitOnce();          
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  //30
+  linearMoveRight();   
+  hitOnce();
+  hitOnce();
+  linearMoveRight();  
+  hitOnce();
+  //35
+  linearMoveLeft();
+  hitOnce();          
+  linearMoveLeft();
+  hitOnce();
+  linearMoveLeft();
+  //40
+  hitOnce();
+  linearMoveRight();  
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  //45
+  linearMoveLeft();
+  linearMoveLeft();
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  //50
+  linearMoveRight();
+  linearMoveRight();  
+  hitOnce();
+  linearMoveLeft();
+  linearMoveLeft();
+  //55
+  hitOnce();
+  linearMoveLeft();
+  linearMoveLeft();
+  hitOnce();
+  //10          
+}
+
+/*
 void playSongOne(){
   
   endCalibrate1();
@@ -339,3 +422,4 @@ void playSongOne(){
   linearMoveLeft();
   hitOnce();
 }
+*/
