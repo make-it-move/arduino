@@ -214,11 +214,24 @@ void checkIfStringValid(String toCheck){
 //Gets information from according to the protocol. Executes rotation with respect to it.
 //Note: uses global variable ifSensorsAttached
 void parseSerialData(String serialString){
-
+  if(serialString[0] == 'P'){
+    playSongOne();
+    
+  } else
   if(serialString[0] == 'R'){ //rotation
-    servo2.write(serialString.substring(1).toInt());
+    if(serialString[1] == 'H'){
+      hitOnce();
+    } else {
+      servo2.write(serialString.substring(1).toInt());
+    }
   } else if ( serialString[0] == 'L'){  //linear movement
-    servo1.write(serialString.substring(1).toInt());
+    if(serialString[1]=='L'){
+      linearMoveLeft();
+    } else if ( serialString[1]=='R'){
+      linearMoveRight();
+    } else {
+      servo1.write(serialString.substring(1).toInt());
+    }
   } else if ( serialString[0] == 'C'){  //Calibration (of linear mover).
     int calibrationSpeed = serialString.substring(1).toInt();
     if (ifSensorsAttached){
@@ -248,4 +261,101 @@ void sendCalibrationInfoProtocol(unsigned long runDuration){
 }
 
 //The information protocol block finishes______________________________________________________________
+
+
+void linearMoveLeft(){
+  servo1.write(0);
+  delay(270);
+  servo1.write(90);
+}
+
+void linearMoveRight(){
+  servo1.write(180);
+  delay(270);
+  servo1.write(90);
+}
+
+void hitOnce(){
+  servo2.write(0);
+  delay(100);
+  servo2.write(180);
+  delay(100);
+  servo2.write(90);
+  hitOnce();
+}
+
+void playSongOne(){
+  
+  endCalibrate1();
+  linearMoveRight();
+  linearMoveRight();
+  linearMoveRight();
+  linearMoveRight();
+  linearMoveRight();
+   //5 
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  linearMoveLeft();
+  hitOnce();
+  //10          
+  linearMoveLeft();
+  hitOnce();
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  //15
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  linearMoveLeft();
+  linearMoveLeft();
+  //20   
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  linearMoveRight();
+  //25
+  hitOnce();          
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  //30
+  linearMoveRight();   
+  hitOnce();
+  hitOnce();
+  linearMoveRight();  
+  hitOnce();
+  //35
+  linearMoveLeft();
+  hitOnce();          
+  linearMoveLeft();
+  hitOnce();
+  linearMoveLeft();
+  //40
+  hitOnce();
+  linearMoveRight();  
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  //45
+  linearMoveLeft();
+  linearMoveLeft();
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  //50
+  linearMoveRight();
+  linearMoveRight();  
+  hitOnce();
+  linearMoveLeft();
+  linearMoveLeft();
+  //55
+  hitOnce();
+  linearMoveLeft();
+  linearMoveLeft();
+  hitOnce();
+}
 
