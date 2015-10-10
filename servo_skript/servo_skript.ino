@@ -161,7 +161,6 @@ void endCheck1 (){
       sensorInput2+=digitalRead(inSensorPin2);
       delay(sensorInertia); //Inertia of the sensor
     }
-    //Serial.print(sensorInput);
     // Left button pressed
     if ( sensorInput1 >= (lowPassFilter*passFraction) ){
       servo1.write(stopValue);
@@ -244,7 +243,7 @@ void sendCalibrationInfoProtocol(unsigned long runDuration){
 
 //The information protocol block finishes______________________________________________________________
 
-
+/* NOT SAFE for boundaries! */
 void linearMoveLeft(){
   servo1.write(0);
   delay(270);
@@ -340,4 +339,3 @@ void playSongOne(){
   linearMoveLeft();
   hitOnce();
 }
-
