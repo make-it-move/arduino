@@ -21,8 +21,8 @@ int inSensorPin2 = 7; //sensor1 pin on Arduino. Reached after rotating clockwise
 int stopValue = 90; //Walue when the engine should actually stop
 int sensorInertia = 1; //Time in milliseconds for the sensor to respond correctly.
 
-int lowPassFilter = 100;  //How low pass the filtar is actualy is
-double passFraction = 0.01;  //Correctness ratio of the sensor
+int lowPassFilter = 10;  //How low pass the filtar is actualy is
+double passFraction = 0.1;  //Correctness ratio of the sensor
 
 unsigned long runDuration; // duration of 1 run at maximal speed. Aquired by the call of timeCalibrate
 
@@ -32,6 +32,7 @@ Servo servo1;
 Servo servo2;
 
 void setup() {
+  Serial.println("Starting Setup");
   // Set two sensor pins on input.
   pinMode(inSensorPin1, INPUT);
   pinMode(inSensorPin2, INPUT);
@@ -56,7 +57,7 @@ void setup() {
     runDuration=timeCalibrate1();  //Move to the other end of the platform, measure time.
     sendCalibrationInfoProtocol(runDuration); //Send calibration data via serial using the protocol.*/
   }
-
+  Serial.println("Starting Completed");
 }
 
 //int num = 0;
@@ -72,7 +73,7 @@ void loop() {
   
   // Serial read section
 
-  endCheck1(); //Safety check, in case the mover is running to the end.
+  //endCheck1(); //Safety check, in case the mover is running to the end.
   if (Serial.available() >0){
     char c = Serial.read();  //gets one byte from serial buffer
     readString += c; //makes the string readString
@@ -226,7 +227,7 @@ void parseSerialData(String serialString){
     }
   }
   //Serial.print(serialString.substring(1).toInt());
-  Serial.println(serialString);
+  //Serial.println(serialString);
 }
 
 //Implementation of information transfer protocol for calibration data.
@@ -234,12 +235,16 @@ void parseSerialData(String serialString){
 //3 digits = time in 0.1*seconds
 //So, time of movement should be between 0.1 and 100 seconds.
 void sendCalibrationInfoProtocol(unsigned long runDuration){
-  Serial.print("C");
+  String calibrationInfo = "C";
   if (runDuration<10000) {
-    if(runDuration<1000) {Serial.print("0");}
-    Serial.print("0");
+    if(runDuration<1000) {
+      calibrationInfo += "0";
+    }
+    calibrationInfo += "0";
   }
-  Serial.println(runDuration/100);  
+  int runDurationInfo = runDuration/100;
+  calibrationInfo += String(runDurationInfo);
+  Serial.println(calibrationInfo);  
 }
 
 //The information protocol block finishes______________________________________________________________
