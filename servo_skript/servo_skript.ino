@@ -273,6 +273,7 @@ void hitOnce(){
 // ** London bridge falling down
 void playSongOne(){
   endCalibrate1(100);
+  
   linearMoveRight();
   linearMoveRight();
   linearMoveRight();
@@ -311,6 +312,7 @@ void playSongOne(){
   //30
   linearMoveRight();   
   hitOnce();
+  delay(300);
   hitOnce();
   linearMoveRight();  
   hitOnce();
