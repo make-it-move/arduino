@@ -11,10 +11,10 @@
 //int inSensorPin2 = 30; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 
 //Arduino UNO Configuration
-int inEnginePin1 = 10;
-int inEnginePin2 = 9;
+int inEnginePin1 = 10; // Linear
+int inEnginePin2 = 9; // Rotary
 
-bool ifSensorsAttached = 0;  //Says if we have switches or not.
+bool ifSensorsAttached = 1;  //Says if we have switches or not.
 int inSensorPin1 = 6; //sensor1 pin on Arduino. Reached after rotating counter-clockwise, speed>90.
 int inSensorPin2 = 7; //sensor1 pin on Arduino. Reached after rotating clockwise, speed<90.
 
@@ -89,31 +89,14 @@ void loop() {
   
 }
 
-
-
 //Calibration block starts______________________________________________________________
 
-//the mover goes maximaly left and stops. Speed is set 180 by defolt.
-void endCalibrate1 (){ //the mover goes maximaly left and stops.
-  int sensorInput=0;
-  int sensorInput2=0; //debug
-  int i;
-  for (i=0; i<lowPassFilter; ++i){  //Low pass filter
-    sensorInput+=digitalRead(inSensorPin1);
-    delay(sensorInertia); //Inertia of the sensor
-  }
-  while ( sensorInput<(lowPassFilter*passFraction) ){ //Some inputs might have mistakes
-    sensorInput=0; 
-    servo1.write(180);
-    for (i=0; i<lowPassFilter; ++i){  //Low pass filter
-      sensorInput+=digitalRead(inSensorPin1);
-      delay(sensorInertia); //Inertia of the sensor  
-    }
-  }
-  servo1.write(stopValue);  //Stop at the starting point
+//the mover goes maximaly left and stops. Speed is set 180 by default.
+void endCalibrate1 (){
+  endCalibrate1(180);
 }
 
-//the mover goes maximaly left and stops. Speed should be set 180 by defolt.
+//the mover goes maximaly left and stops. Speed should be set 180 by default.
 void endCalibrate1 (int calibrationSpeed){
   int sensorInput=0;
   for (int i=0; i<lowPassFilter; ++i){    //Low pass filter
@@ -136,25 +119,7 @@ void endCalibrate1 (int calibrationSpeed){
 //Run a mover untill we reach sensor 2, then stop. Speed is set 0.
 //Output: duration of movement in milliseconds.
 int timeCalibrate1 (){
-  int oneRunTime=0;
-  int sensorInput=0;
-  int i;
-  unsigned long startTime = millis();  //starting point in time.
-  for (i=0; i<lowPassFilter; ++i){  //Low pass filter
-    sensorInput+=digitalRead(inSensorPin2);
-    delay(sensorInertia); //Inertia of the sensor
-  }
-  while ( sensorInput<(lowPassFilter*passFraction) ){ //Some inputs might have mistakes
-    sensorInput=0; 
-    servo1.write(0);
-    for (i=0; i<lowPassFilter; ++i){  //Low pass filter
-      //Serial.print(sensorInput);
-      sensorInput+=digitalRead(inSensorPin2);
-      delay(sensorInertia); //Inertia of the sensor
-    }
-  }
-  servo1.write(stopValue);  //Stop at the starting point
-  return millis()- startTime;; //finnishing (point in time) - starting (point in time) = duration
+  timeCalibrate1(180);
 }
 
 //Run a mover untill we reach sensor 2, then stop.
@@ -204,7 +169,6 @@ void endCheck1 (){
 }
 
 void checkIfStringValid(String toCheck){
-
   
 }
 
@@ -236,7 +200,7 @@ void parseSerialData(String serialString){
     int calibrationSpeed = serialString.substring(1).toInt();
     if (ifSensorsAttached){
       endCalibrate1(calibrationSpeed);  //Move to the start of the platform. 
-      sendCalibrationInfoProtocol(timeCalibrate1(calibrationSpeed));  //Move to the other end of the platform, measure time. Send calibration data via serial using the protocol.
+      sendCalibrationInfoProtocol(timeCalibrate1(180-calibrationSpeed));  //Move to the other end of the platform, measure time. Send calibration data via serial using the protocol.
     }
   }
   //Serial.print(serialString.substring(1).toInt());
