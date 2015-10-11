@@ -185,7 +185,11 @@ void checkIfStringValid(String toCheck){
 //Note: uses global variable ifSensorsAttached
 void parseSerialData(String serialString){
   if(serialString[0] == 'P'){
-    playSongOne();
+    if(serialString[1] == '1'){
+      playSongOne();
+    } else if ( serialString[1] == '2'){
+      playSongTwo();
+    }
   } else if(serialString[0] == 'R'){ //rotation
     if(serialString[1] == 'H'){
       hitOnce();
@@ -324,7 +328,7 @@ void playSongOne(){
   linearMoveLeft();
   //40
   hitOnce();
-  linearMoveRight();  
+  linearMoveRight();
   hitOnce();
   linearMoveRight();
   hitOnce();
@@ -345,5 +349,65 @@ void playSongOne(){
   linearMoveLeft();
   linearMoveLeft();
   hitOnce();
-  //10          
 }
+//Alle meine Enten
+void playSongTwo(){
+  endCalibrate1(100);
+
+  //0
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  //5
+  linearMoveRight();
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  delay(300);
+  //10
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  hitOnce();
+  hitOnce();
+  //15
+  hitOnce();
+  linearMoveLeft();
+  hitOnce();
+  linearMoveRight();
+  hitOnce();
+  //20
+  hitOnce();
+  hitOnce();
+  hitOnce();
+  linearMoveLeft();
+  hitOnce();
+  //25
+  linearMoveLeft();
+  hitOnce();
+  hitOnce();
+  hitOnce();
+  hitOnce();
+  //30
+  linearMoveLeft();
+  hitOnce();
+  delay(300);
+  hitOnce();
+  linearMoveRight();
+  //35
+  linearMoveRight();
+  hitOnce();
+  hitOnce();
+  hitOnce();
+  hitOnce();
+  //40
+  linearMoveLeft();
+  linearMoveLeft();
+  linearMoveLeft();
+  linearMoveLeft();
+  hitOnce();
+  //45
+}
+
